@@ -73,7 +73,7 @@ export function useGameState() {
       difficulty: selectedDifficulty,
       startTime: Date.now(),
       gameStatus: "playing",
-      showConflicts: false,
+      showConflicts: true,
       theme: fruitTheme,
       customFruits,
     });
@@ -90,7 +90,7 @@ export function useGameState() {
         difficulty,
         startTime: Date.now(),
         gameStatus: "playing",
-        showConflicts: false,
+        showConflicts: true,
         theme: fruitTheme,
         customFruits,
       });
