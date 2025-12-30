@@ -24,4 +24,6 @@ export interface GameState {
   showConflicts: boolean;
   theme: Theme;
   customFruits: string[]; // Array of 9 emojis for custom theme
+  history: Grid[]; // Array of past grid states (cell values only)
+  historyIndex: number; // Current position in history (-1 when empty)
 }

@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { loadFromStorage, STORAGE_KEYS, saveToStorage } from "src/lib/storage";
-import { generatePuzzle, getConflictingCells, isSolved } from "src/lib/sudoku";
+import {
+  cloneGrid,
+  generatePuzzle,
+  getConflictingCells,
+  isSolved,
+  MAX_HISTORY_DEPTH,
+} from "src/lib/sudoku";
 import { getFruitsForTheme } from "src/lib/themes";
 import type { Difficulty, GameState, Screen, Theme } from "src/lib/types";
 
@@ -67,8 +73,9 @@ export function useGameState() {
 
   // Start game from landing page
   const startGame = useCallback(() => {
+    const initialGrid = generatePuzzle(selectedDifficulty);
     setGameState({
-      grid: generatePuzzle(selectedDifficulty),
+      grid: initialGrid,
       selectedCell: null,
       difficulty: selectedDifficulty,
       startTime: Date.now(),
@@ -76,6 +83,8 @@ export function useGameState() {
       showConflicts: true,
       theme: fruitTheme,
       customFruits,
+      history: [cloneGrid(initialGrid)],
+      historyIndex: 0,
     });
     setElapsedTime(0);
     setScreen("playing");
@@ -84,8 +93,9 @@ export function useGameState() {
   // Start new game (from GameControls or win screen)
   const newGame = useCallback(
     (difficulty: Difficulty) => {
+      const initialGrid = generatePuzzle(difficulty);
       setGameState({
-        grid: generatePuzzle(difficulty),
+        grid: initialGrid,
         selectedCell: null,
         difficulty,
         startTime: Date.now(),
@@ -93,6 +103,8 @@ export function useGameState() {
         showConflicts: true,
         theme: fruitTheme,
         customFruits,
+        history: [cloneGrid(initialGrid)],
+        historyIndex: 0,
       });
       setElapsedTime(0);
       setScreen("playing");
@@ -139,6 +151,17 @@ export function useGameState() {
       }
 
       const { row, col } = prev.selectedCell;
+      const currentValue = prev.grid[row][col].value;
+
+      // If value isn't changing, do nothing (don't add to history)
+      if (
+        currentValue ===
+        (fruit === null ? null : (fruit as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8))
+      ) {
+        return prev;
+      }
+
+      // Create the new grid with the move applied
       const newGrid = prev.grid.map((r) =>
         r.map((cell) => {
           if (cell.row === row && cell.col === col) {
@@ -158,10 +181,26 @@ export function useGameState() {
         ? ("won" as const)
         : ("playing" as const);
 
+      // Handle history: if we're in the middle of history, truncate forward history
+      let newHistory = [...prev.history];
+      if (prev.historyIndex < prev.history.length - 1) {
+        newHistory = newHistory.slice(0, prev.historyIndex + 1);
+      }
+
+      // Push the new grid state to history (after the move is made)
+      newHistory.push(cloneGrid(newGrid));
+
+      // Implement depth limit
+      if (newHistory.length > MAX_HISTORY_DEPTH) {
+        newHistory.shift();
+      }
+
       const newState: GameState = {
         ...prev,
         grid: newGrid,
         gameStatus: newStatus,
+        history: newHistory,
+        historyIndex: newHistory.length - 1,
       };
 
       // Auto-transition to win screen
@@ -170,6 +209,32 @@ export function useGameState() {
       }
 
       return newState;
+    });
+  }, []);
+
+  const undo = useCallback(() => {
+    setGameState((prev) => {
+      if (!prev || prev.historyIndex <= 0) return prev;
+      const newIndex = prev.historyIndex - 1;
+      return {
+        ...prev,
+        grid: cloneGrid(prev.history[newIndex]),
+        historyIndex: newIndex,
+        // Timer and other state remain unchanged
+      };
+    });
+  }, []);
+
+  const redo = useCallback(() => {
+    setGameState((prev) => {
+      if (!prev || prev.historyIndex >= prev.history.length - 1) return prev;
+      const newIndex = prev.historyIndex + 1;
+      return {
+        ...prev,
+        grid: cloneGrid(prev.history[newIndex]),
+        historyIndex: newIndex,
+        // Timer and other state remain unchanged
+      };
     });
   }, []);
 
@@ -196,5 +261,11 @@ export function useGameState() {
     toggleConflicts,
     handleCellClick,
     handleFruitClick,
+    undo,
+    redo,
+    canUndo: (gameState?.historyIndex ?? 0) > 0,
+    canRedo: gameState
+      ? gameState.historyIndex < gameState.history.length - 1
+      : false,
   };
 }

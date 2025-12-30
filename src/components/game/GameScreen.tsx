@@ -20,6 +20,10 @@ interface GameScreenProps {
   onHome: () => void;
   onCellClick: (row: number, col: number) => void;
   onFruitClick: (fruit: number | null) => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
 }
 
 export function GameScreen({
@@ -39,6 +43,10 @@ export function GameScreen({
   onHome,
   onCellClick,
   onFruitClick,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
 }: GameScreenProps) {
   return (
     <>
@@ -52,6 +60,10 @@ export function GameScreen({
         onToggleConflicts={onToggleConflicts}
         onHome={onHome}
         showConflicts={showConflicts}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onUndo={onUndo}
+        onRedo={onRedo}
       />
 
       <SudokuGrid

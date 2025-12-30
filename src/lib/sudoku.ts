@@ -7,6 +7,9 @@ export const DIFFICULTY_HOLES: Record<Difficulty, number> = {
   hard: 41,
 };
 
+// Maximum number of history states to keep
+export const MAX_HISTORY_DEPTH = 50;
+
 /**
  * Check if placing a value at the given position is valid according to Sudoku rules
  */
@@ -229,7 +232,7 @@ function removeCells(grid: Grid, difficulty: Difficulty): void {
 /**
  * Deep clone a grid
  */
-function cloneGrid(grid: Grid): Grid {
+export function cloneGrid(grid: Grid): Grid {
   return grid.map((row) =>
     row.map((cell) => ({
       ...cell,

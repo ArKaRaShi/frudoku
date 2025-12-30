@@ -30,6 +30,10 @@ export default function Home() {
     toggleConflicts,
     handleCellClick,
     handleFruitClick,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
   } = useGameState();
 
   // Appearance theme (light/dark)
@@ -52,7 +56,13 @@ export default function Home() {
               setAppearanceTheme(appearanceTheme === "dark" ? "light" : "dark")
             }
             className="absolute top-4 right-4 p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
-            aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
+            aria-label={
+              mounted
+                ? appearanceTheme === "dark"
+                  ? "โหมดสว่าง"
+                  : "โหมดมืด"
+                : "สลับธีม"
+            }
           >
             {mounted &&
               (appearanceTheme === "dark" ? (
@@ -127,6 +137,10 @@ export default function Home() {
           onHome={goToLanding}
           onCellClick={handleCellClick}
           onFruitClick={handleFruitClick}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          onUndo={undo}
+          onRedo={redo}
         />
       </main>
     </div>
