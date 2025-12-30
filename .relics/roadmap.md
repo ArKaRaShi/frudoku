@@ -132,13 +132,19 @@
 #### 11.4 Smart Cell Highlighting
 **Complexity:** Low | **Why:** Visual clarity - helps players see relationships.
 
-- [ ] Highlight selected cell's row, column, and 3x3 box
-- [ ] Highlight all cells with same fruit when one is selected
-- [ ] Use subtle background colors (e.g., zinc-100 for related cells)
-- [ ] Add CSS classes for `related-row`, `related-col`, `related-box`, `same-fruit`
-- [ ] Ensure doesn't conflict with conflict highlighting
+- [x] Highlight selected cell's row, column, and 3x3 box
+- [x] Highlight all cells with same fruit when one is selected
+- [x] Use subtle background colors (zinc-100 for related cells, amber-100 for same fruit)
+- [x] Add CSS classes for `related-row`, `related-col`, `related-box`, `same-fruit`
+- [x] Ensure doesn't conflict with conflict highlighting
 
 **Dependencies:** None | **Exit Criteria:** Player can easily see cell relationships when selecting
+
+**Implementation Notes:**
+- Added highlight props to Cell component: `isRelatedRow`, `isRelatedCol`, `isRelatedBox`, `isSameFruit`
+- Board component calculates these states using helper functions
+- Priority: Conflict > Initial > Selected > Same fruit > Related > Normal
+- Lint checks pass
 
 ---
 
