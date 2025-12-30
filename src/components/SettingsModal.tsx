@@ -90,7 +90,9 @@ export function SettingsModal({
                       <span key={fruit}>{fruit}</span>
                     ))}
                   </div>
-                  <span className="text-sm sm:text-base">{THEMES[theme].nameTh}</span>
+                  <span className="text-sm sm:text-base">
+                    {THEMES[theme].nameTh}
+                  </span>
                 </button>
               ))}
             </div>

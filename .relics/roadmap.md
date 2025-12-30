@@ -64,10 +64,10 @@
 - Tropical: 🥥 🥭 🍌 🍍 🥝 🍉 🍈 🥑 🍅
 
 ## Phase 10: Dark/Light Mode (Appearance Theme)
-- [ ] Theme toggle button (sun/moon icon) - placed next to hamburger menu
-- [ ] System preference detection
-- [ ] Local storage for theme persistence
-- [ ] Smooth transition between themes
-- [ ] Update all Tailwind dark: classes to work properly
+- [x] Theme toggle button (sun/moon icon) - placed next to hamburger menu
+- [x] System preference detection (via next-themes)
+- [x] Local storage for theme persistence (via next-themes)
+- [x] Smooth transition between themes (via CSS transitions)
+- [x] Update all Tailwind dark: classes to work properly
 
-**Layout:** ระดับความยาก | เวลา: 00:00 [🌙/☀️] [≡ เมนู]
+**Implementation:** Used `next-themes` library for robust theme handling with SSR support. Theme toggle buttons added to all screens (landing, playing, won). Layout: ระดับความยาก | เวลา: 00:00 [🌙/☀️] [≡ เมนู]

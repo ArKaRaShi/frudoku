@@ -1,7 +1,16 @@
 "use client";
 
+import {
+  AlertCircle,
+  Check,
+  Home as HomeIcon,
+  Menu,
+  Moon,
+  RotateCw,
+  Sun,
+} from "lucide-react";
+import { useTheme } from "next-themes";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, Check, Home as HomeIcon, Menu, RotateCw } from "lucide-react";
 import { FruitPicker } from "src/components/FruitPicker";
 import { LandingPage } from "src/components/LandingPage";
 import { SettingsModal } from "src/components/SettingsModal";
@@ -84,8 +93,8 @@ export default function Home() {
   const [selectedDifficulty, setSelectedDifficulty] =
     useState<Difficulty>("medium");
 
-  // Theme state
-  const [theme, setTheme] = useState<Theme>(() =>
+  // Fruit theme state
+  const [fruitTheme, setFruitTheme] = useState<Theme>(() =>
     loadFromStorage<Theme>(STORAGE_KEYS.THEME, "default"),
   );
   const [customFruits, setCustomFruits] = useState<string[]>(() =>
@@ -108,6 +117,15 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Appearance theme (light/dark)
+  const { theme: appearanceTheme, setTheme: setAppearanceTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -127,14 +145,14 @@ export default function Home() {
 
   // Get current fruits based on theme
   const currentFruits = useMemo(
-    () => getFruitsForTheme(theme, customFruits),
-    [theme, customFruits],
+    () => getFruitsForTheme(fruitTheme, customFruits),
+    [fruitTheme, customFruits],
   );
 
   // Save theme to storage whenever it changes
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.THEME, theme);
-  }, [theme]);
+    saveToStorage(STORAGE_KEYS.THEME, fruitTheme);
+  }, [fruitTheme]);
 
   useEffect(() => {
     saveToStorage(STORAGE_KEYS.CUSTOM_FRUITS, customFruits);
@@ -166,12 +184,12 @@ export default function Home() {
       startTime: Date.now(),
       gameStatus: "playing",
       showConflicts: false,
-      theme,
+      theme: fruitTheme,
       customFruits,
     });
     setElapsedTime(0);
     setScreen("playing");
-  }, [selectedDifficulty, theme, customFruits]);
+  }, [selectedDifficulty, fruitTheme, customFruits]);
 
   // Start new game (from GameControls or win screen)
   const newGame = useCallback(
@@ -183,13 +201,13 @@ export default function Home() {
         startTime: Date.now(),
         gameStatus: "playing",
         showConflicts: false,
-        theme,
+        theme: fruitTheme,
         customFruits,
       });
       setElapsedTime(0);
       setScreen("playing");
     },
-    [theme, customFruits],
+    [fruitTheme, customFruits],
   );
 
   // Return to landing page
@@ -269,20 +287,40 @@ export default function Home() {
   if (screen === "landing") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        <main className="flex flex-col items-center gap-8 py-16 px-4">
+        <main className="flex flex-col items-center gap-8 py-16 px-4 w-full max-w-md relative">
+          {/* Theme toggle button */}
+          {mounted && (
+            <button
+              type="button"
+              onClick={() =>
+                setAppearanceTheme(
+                  appearanceTheme === "dark" ? "light" : "dark",
+                )
+              }
+              className="absolute top-4 right-4 p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+              aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
+            >
+              {appearanceTheme === "dark" ? (
+                <Sun size={20} />
+              ) : (
+                <Moon size={20} />
+              )}
+            </button>
+          )}
           <LandingPage
             selectedDifficulty={selectedDifficulty}
             onDifficultyChange={setSelectedDifficulty}
             onStart={startGame}
             onSettings={() => setSettingsModalOpen(true)}
             currentFruits={currentFruits}
+            mounted={mounted}
           />
           <SettingsModal
             isOpen={settingsModalOpen}
             onClose={() => setSettingsModalOpen(false)}
-            currentTheme={theme}
+            currentTheme={fruitTheme}
             customFruits={customFruits}
-            onThemeChange={setTheme}
+            onThemeChange={setFruitTheme}
             onCustomFruitsChange={setCustomFruits}
           />
         </main>
@@ -295,7 +333,26 @@ export default function Home() {
     const { difficulty, grid } = gameState;
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        <main className="flex flex-col items-center gap-8 py-16 px-4">
+        <main className="flex flex-col items-center gap-8 py-16 px-4 w-full max-w-lg relative">
+          {/* Theme toggle button */}
+          {mounted && (
+            <button
+              type="button"
+              onClick={() =>
+                setAppearanceTheme(
+                  appearanceTheme === "dark" ? "light" : "dark",
+                )
+              }
+              className="absolute top-4 right-4 p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+              aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
+            >
+              {appearanceTheme === "dark" ? (
+                <Sun size={20} />
+              ) : (
+                <Moon size={20} />
+              )}
+            </button>
+          )}
           <div className="px-8 py-6 bg-green-100 dark:bg-green-900 rounded-2xl text-center">
             <h2 className="text-4xl font-bold text-green-800 dark:text-green-200 mb-2">
               คุณชนะแล้ว! 🎉
@@ -347,12 +404,37 @@ export default function Home() {
         {/* Info bar with hamburger menu */}
         <div className="flex items-center justify-between w-full text-sm relative">
           <span className="text-zinc-600 dark:text-zinc-400">
-            ระดับความยาก: <span className="font-semibold text-zinc-800 dark:text-zinc-200">{getDifficultyLabel(difficulty)}</span>
+            ระดับความยาก:{" "}
+            <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+              {getDifficultyLabel(difficulty)}
+            </span>
           </span>
           <div className="flex items-center gap-3">
             <span className="text-zinc-600 dark:text-zinc-400">
-              เวลา: <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">{formatTime(elapsedTime)}</span>
+              เวลา:{" "}
+              <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">
+                {formatTime(elapsedTime)}
+              </span>
             </span>
+            {/* Theme toggle button */}
+            {mounted && (
+              <button
+                type="button"
+                onClick={() =>
+                  setAppearanceTheme(
+                    appearanceTheme === "dark" ? "light" : "dark",
+                  )
+                }
+                className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+                aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
+              >
+                {appearanceTheme === "dark" ? (
+                  <Sun size={18} />
+                ) : (
+                  <Moon size={18} />
+                )}
+              </button>
+            )}
             <div className="relative" ref={menuRef}>
               <button
                 type="button"
@@ -389,8 +471,14 @@ export default function Home() {
                         : "text-zinc-700 dark:text-zinc-300"
                     }`}
                   >
-                    {showConflicts ? <Check size={16} /> : <AlertCircle size={16} />}
-                    <span>{showConflicts ? "ซ่อนผลไม้ชนกัน" : "แสดงผลไม้ชนกัน"}</span>
+                    {showConflicts ? (
+                      <Check size={16} />
+                    ) : (
+                      <AlertCircle size={16} />
+                    )}
+                    <span>
+                      {showConflicts ? "ซ่อนผลไม้ชนกัน" : "แสดงผลไม้ชนกัน"}
+                    </span>
                   </button>
                   <button
                     type="button"
