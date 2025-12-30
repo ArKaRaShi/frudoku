@@ -19,7 +19,7 @@ export function Board({
   fruits,
 }: BoardProps) {
   return (
-    <div className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-700 border-2 sm:border-4 border-black dark:border-zinc-700 rounded">
+    <div className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-500 border-2 sm:border-4 border-black dark:border-zinc-500 rounded">
       {cells.map((boxRow) =>
         boxRow.map((box) => {
           // Use the first cell's position as unique box identifier
@@ -30,7 +30,7 @@ export function Board({
           return (
             <div
               key={boxKey}
-              className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-700"
+              className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-500"
             >
               {box.map((row) =>
                 row.map((cell) => {

@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  AlertCircle,
-  Check,
-  Home as HomeIcon,
-  Menu,
-  Moon,
-  RotateCw,
-  Sun,
-} from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FruitPicker } from "src/components/FruitPicker";
+import { GameMenu } from "src/components/GameMenu";
 import { LandingPage } from "src/components/LandingPage";
 import { SettingsModal } from "src/components/SettingsModal";
 import { SudokuGrid } from "src/components/SudokuGrid";
@@ -114,8 +107,6 @@ export default function Home() {
 
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   // Appearance theme (light/dark)
   const { theme: appearanceTheme, setTheme: setAppearanceTheme } = useTheme();
@@ -125,23 +116,6 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-
-    if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuOpen]);
 
   // Get current fruits based on theme
   const currentFruits = useMemo(
@@ -398,104 +372,94 @@ export default function Home() {
   const { grid, selectedCell, difficulty, gameStatus, showConflicts } =
     gameState;
 
+  // Mobile layout
+  const renderMobileInfoBar = () => (
+    <div className="flex flex-col items-end gap-2 w-full sm:hidden">
+      <div className="flex items-center gap-3 w-full justify-end">
+        {/* Theme toggle button */}
+        {mounted && (
+          <button
+            type="button"
+            onClick={() =>
+              setAppearanceTheme(appearanceTheme === "dark" ? "light" : "dark")
+            }
+            className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+            aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
+          >
+            {appearanceTheme === "dark" ? (
+              <Sun size={18} />
+            ) : (
+              <Moon size={18} />
+            )}
+          </button>
+        )}
+        <GameMenu
+          difficulty={difficulty}
+          showConflicts={showConflicts}
+          onNewGame={() => newGame(difficulty)}
+          onToggleConflicts={toggleConflicts}
+          onHome={goToLanding}
+        />
+      </div>
+      <div className="flex justify-between w-full">
+        <span className="text-zinc-600 dark:text-zinc-400 text-sm self-start">
+          {getDifficultyLabel(difficulty)}
+        </span>
+        <span className="text-zinc-600 dark:text-zinc-400 text-sm">
+          <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">
+            {formatTime(elapsedTime)}
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+
+  // Desktop layout
+  const renderDesktopInfoBar = () => (
+    <div className="hidden sm:flex items-center justify-between w-full text-sm relative">
+      <span className="text-zinc-600 dark:text-zinc-400">
+        {getDifficultyLabel(difficulty)}
+      </span>
+      <div className="flex items-center gap-3">
+        <span className="text-zinc-600 dark:text-zinc-400">
+          <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">
+            {formatTime(elapsedTime)}
+          </span>
+        </span>
+        {/* Theme toggle button */}
+        {mounted && (
+          <button
+            type="button"
+            onClick={() =>
+              setAppearanceTheme(appearanceTheme === "dark" ? "light" : "dark")
+            }
+            className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+            aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
+          >
+            {appearanceTheme === "dark" ? (
+              <Sun size={18} />
+            ) : (
+              <Moon size={18} />
+            )}
+          </button>
+        )}
+        <GameMenu
+          difficulty={difficulty}
+          showConflicts={showConflicts}
+          onNewGame={() => newGame(difficulty)}
+          onToggleConflicts={toggleConflicts}
+          onHome={goToLanding}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-col items-center gap-6 py-16 px-4 w-full max-w-lg">
         {/* Info bar with hamburger menu */}
-        <div className="flex items-center justify-between w-full text-sm relative">
-          <span className="text-zinc-600 dark:text-zinc-400">
-            ระดับความยาก:{" "}
-            <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-              {getDifficultyLabel(difficulty)}
-            </span>
-          </span>
-          <div className="flex items-center gap-3">
-            <span className="text-zinc-600 dark:text-zinc-400">
-              เวลา:{" "}
-              <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">
-                {formatTime(elapsedTime)}
-              </span>
-            </span>
-            {/* Theme toggle button */}
-            {mounted && (
-              <button
-                type="button"
-                onClick={() =>
-                  setAppearanceTheme(
-                    appearanceTheme === "dark" ? "light" : "dark",
-                  )
-                }
-                className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
-                aria-label={appearanceTheme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}
-              >
-                {appearanceTheme === "dark" ? (
-                  <Sun size={18} />
-                ) : (
-                  <Moon size={18} />
-                )}
-              </button>
-            )}
-            <div className="relative" ref={menuRef}>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
-                aria-label="เมนู"
-              >
-                <Menu size={18} />
-                <span>เมนู</span>
-              </button>
-
-              {/* Dropdown menu */}
-              {menuOpen && (
-                <div className="absolute right-0 top-12 mt-1 w-52 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden z-50">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      newGame(difficulty);
-                      setMenuOpen(false);
-                    }}
-                    className="w-full px-4 py-3 text-left text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-3"
-                  >
-                    <RotateCw size={16} />
-                    <span>เกมใหม่</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      toggleConflicts();
-                    }}
-                    className={`w-full px-4 py-3 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-3 ${
-                      showConflicts
-                        ? "text-red-700 dark:text-red-300"
-                        : "text-zinc-700 dark:text-zinc-300"
-                    }`}
-                  >
-                    {showConflicts ? (
-                      <Check size={16} />
-                    ) : (
-                      <AlertCircle size={16} />
-                    )}
-                    <span>
-                      {showConflicts ? "ซ่อนผลไม้ชนกัน" : "แสดงผลไม้ชนกัน"}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      goToLanding();
-                      setMenuOpen(false);
-                    }}
-                    className="w-full px-4 py-3 text-left text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-3"
-                  >
-                    <HomeIcon size={16} />
-                    <span>หน้าหลัก</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        {renderMobileInfoBar()}
+        {renderDesktopInfoBar()}
 
         <SudokuGrid
           grid={grid}
@@ -519,7 +483,9 @@ export default function Home() {
 function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  return `${mins.toString().padStart(2, "0")}:${secs
+    .toString()
+    .padStart(2, "0")}`;
 }
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {

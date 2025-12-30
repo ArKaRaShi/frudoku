@@ -28,12 +28,12 @@ export function Cell({
         hasConflict
           ? "bg-red-200 dark:bg-red-900"
           : cell.initial
-            ? "bg-zinc-300 dark:bg-zinc-700 font-bold"
+            ? "bg-zinc-300 dark:bg-zinc-600 font-bold"
             : isSelected
               ? "bg-yellow-200 dark:bg-yellow-800"
-              : "bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-      } ${isBoxRight ? "border-r-2 border-black dark:border-zinc-600" : ""} ${
-        isBoxBottom ? "border-b-2 border-black dark:border-zinc-600" : ""
+              : "bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+      } ${isBoxRight ? "border-r-2 border-black dark:border-zinc-500" : ""} ${
+        isBoxBottom ? "border-b-2 border-black dark:border-zinc-500" : ""
       }`}
       disabled={disabled || cell.initial}
       aria-label={`Cell ${cell.row + 1}, ${cell.col + 1}${
