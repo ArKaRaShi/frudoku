@@ -3,8 +3,8 @@ import type { Difficulty, Grid } from "./types";
 // Number of cells to remove for each difficulty level
 export const DIFFICULTY_HOLES: Record<Difficulty, number> = {
   easy: 21,
-  medium: 41,
-  hard: 61,
+  medium: 31,
+  hard: 41,
 };
 
 /**
