@@ -62,3 +62,12 @@
 **Themes:**
 - Default: 🍎 🍊 🍋 🍇 🍓 🍑 🥝 🍒 🍍
 - Tropical: 🥥 🥭 🍌 🍍 🥝 🍉 🍈 🥑 🍅
+
+## Phase 10: Dark/Light Mode (Appearance Theme)
+- [ ] Theme toggle button (sun/moon icon) - placed next to hamburger menu
+- [ ] System preference detection
+- [ ] Local storage for theme persistence
+- [ ] Smooth transition between themes
+- [ ] Update all Tailwind dark: classes to work properly
+
+**Layout:** ระดับความยาก | เวลา: 00:00 [🌙/☀️] [≡ เมนู]

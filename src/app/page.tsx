@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AlertCircle, Check, Home as HomeIcon, Menu, RotateCw } from "lucide-react";
 import { FruitPicker } from "src/components/FruitPicker";
-import { GameControls } from "src/components/GameControls";
 import { LandingPage } from "src/components/LandingPage";
 import { SettingsModal } from "src/components/SettingsModal";
 import { SudokuGrid } from "src/components/SudokuGrid";
@@ -105,6 +105,25 @@ export default function Home() {
 
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   // Get current fruits based on theme
   const currentFruits = useMemo(
@@ -324,37 +343,71 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-col items-center gap-8 py-16 px-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-black dark:text-zinc-50">
-            ซูโดกุผลไม้
-          </h1>
-          <button
-            type="button"
-            onClick={goToLanding}
-            className="px-3 py-1 text-sm rounded-full bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
-          >
-            เมนู
-          </button>
+      <main className="flex flex-col items-center gap-6 py-16 px-4 w-full max-w-lg">
+        {/* Info bar with hamburger menu */}
+        <div className="flex items-center justify-between w-full text-sm relative">
+          <span className="text-zinc-600 dark:text-zinc-400">
+            ระดับความยาก: <span className="font-semibold text-zinc-800 dark:text-zinc-200">{getDifficultyLabel(difficulty)}</span>
+          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-zinc-600 dark:text-zinc-400">
+              เวลา: <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">{formatTime(elapsedTime)}</span>
+            </span>
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+                aria-label="เมนู"
+              >
+                <Menu size={18} />
+                <span>เมนู</span>
+              </button>
+
+              {/* Dropdown menu */}
+              {menuOpen && (
+                <div className="absolute right-0 top-12 mt-1 w-52 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden z-50">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      newGame(difficulty);
+                      setMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-3 text-left text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-3"
+                  >
+                    <RotateCw size={16} />
+                    <span>เกมใหม่</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleConflicts();
+                    }}
+                    className={`w-full px-4 py-3 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-3 ${
+                      showConflicts
+                        ? "text-red-700 dark:text-red-300"
+                        : "text-zinc-700 dark:text-zinc-300"
+                    }`}
+                  >
+                    {showConflicts ? <Check size={16} /> : <AlertCircle size={16} />}
+                    <span>{showConflicts ? "ซ่อนผลไม้ชนกัน" : "แสดงผลไม้ชนกัน"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      goToLanding();
+                      setMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-3 text-left text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center gap-3"
+                  >
+                    <HomeIcon size={16} />
+                    <span>หน้าหลัก</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-
-        <GameControls
-          onNewGame={() => newGame(difficulty)}
-          elapsedTime={elapsedTime}
-        />
-
-        {/* Toggle conflicts button */}
-        <button
-          type="button"
-          onClick={toggleConflicts}
-          className={`px-4 py-2 text-sm rounded-full transition-colors ${
-            showConflicts
-              ? "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border-2 border-red-300 dark:border-red-700"
-              : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700"
-          }`}
-        >
-          {showConflicts ? "✔️ แสดงผลไม้ชนกัน" : "แสดงผลไม้ชนกัน"}
-        </button>
 
         <SudokuGrid
           grid={grid}
@@ -379,4 +432,14 @@ function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+}
+
+const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  easy: "ง่าย",
+  medium: "ปานกลาง",
+  hard: "ยาก",
+};
+
+function getDifficultyLabel(difficulty: Difficulty): string {
+  return DIFFICULTY_LABELS[difficulty];
 }
