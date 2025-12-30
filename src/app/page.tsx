@@ -34,6 +34,8 @@ export default function Home() {
     canRedo,
     undo,
     redo,
+    noteMode,
+    toggleNoteMode,
   } = useGameState();
 
   // Appearance theme (light/dark)
@@ -141,6 +143,8 @@ export default function Home() {
           canRedo={canRedo}
           onUndo={undo}
           onRedo={redo}
+          noteMode={noteMode}
+          onToggleNoteMode={toggleNoteMode}
         />
       </main>
     </div>

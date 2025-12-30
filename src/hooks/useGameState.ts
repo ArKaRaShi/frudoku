@@ -85,6 +85,7 @@ export function useGameState() {
       customFruits,
       history: [cloneGrid(initialGrid)],
       historyIndex: 0,
+      noteMode: false,
     });
     setElapsedTime(0);
     setScreen("playing");
@@ -105,6 +106,7 @@ export function useGameState() {
         customFruits,
         history: [cloneGrid(initialGrid)],
         historyIndex: 0,
+        noteMode: false,
       });
       setElapsedTime(0);
       setScreen("playing");
@@ -124,6 +126,14 @@ export function useGameState() {
     setGameState((prev) => {
       if (!prev) return null;
       return { ...prev, showConflicts: !prev.showConflicts };
+    });
+  }, []);
+
+  // Toggle note mode
+  const toggleNoteMode = useCallback(() => {
+    setGameState((prev) => {
+      if (!prev) return null;
+      return { ...prev, noteMode: !prev.noteMode };
     });
   }, []);
 
@@ -151,6 +161,44 @@ export function useGameState() {
       }
 
       const { row, col } = prev.selectedCell;
+
+      // Note mode: clear notes when clicking X (fruit === null)
+      if (prev.noteMode && fruit === null) {
+        const cell = prev.grid[row][col];
+        if (cell.notes.length === 0) return prev;
+
+        const newGrid = prev.grid.map((r) =>
+          r.map((c) => {
+            if (c.row === row && c.col === col) {
+              return { ...c, notes: [] };
+            }
+            return c;
+          }),
+        );
+
+        return { ...prev, grid: newGrid };
+      }
+
+      // Note mode: toggle fruit in notes array
+      if (prev.noteMode && fruit !== null) {
+        const cell = prev.grid[row][col];
+        const newNotes = cell.notes.includes(fruit)
+          ? cell.notes.filter((n) => n !== fruit)
+          : [...cell.notes, fruit].sort((a, b) => a - b);
+
+        const newGrid = prev.grid.map((r) =>
+          r.map((c) => {
+            if (c.row === row && c.col === col) {
+              return { ...c, notes: newNotes };
+            }
+            return c;
+          }),
+        );
+
+        return { ...prev, grid: newGrid };
+      }
+
+      // Normal mode: place fruit
       const currentValue = prev.grid[row][col].value;
 
       // If value isn't changing, do nothing (don't add to history)
@@ -162,7 +210,7 @@ export function useGameState() {
       }
 
       // Create the new grid with the move applied
-      const newGrid = prev.grid.map((r) =>
+      let newGrid = prev.grid.map((r) =>
         r.map((cell) => {
           if (cell.row === row && cell.col === col) {
             return {
@@ -171,11 +219,34 @@ export function useGameState() {
                 fruit === null
                   ? null
                   : (fruit as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8),
+              notes: [], // Clear notes when fruit is placed
             };
           }
           return cell;
         }),
       );
+
+      // Smart note clearing: conservative (row/col/box only)
+      if (fruit !== null) {
+        newGrid = newGrid.map((r) =>
+          r.map((cell) => {
+            const isInSameRow = cell.row === row;
+            const isInSameCol = cell.col === col;
+            const isInSameBox =
+              Math.floor(cell.row / 3) === Math.floor(row / 3) &&
+              Math.floor(cell.col / 3) === Math.floor(col / 3);
+
+            const shouldClearNote = isInSameRow || isInSameCol || isInSameBox;
+
+            return {
+              ...cell,
+              notes: shouldClearNote
+                ? cell.notes.filter((n) => n !== fruit)
+                : cell.notes,
+            };
+          }),
+        );
+      }
 
       const newStatus = isSolved(newGrid)
         ? ("won" as const)
@@ -253,12 +324,14 @@ export function useGameState() {
     elapsedTime,
     currentFruits,
     conflictingCells,
+    noteMode: gameState?.noteMode ?? false,
 
     // Callbacks
     startGame,
     newGame,
     goToLanding,
     toggleConflicts,
+    toggleNoteMode,
     handleCellClick,
     handleFruitClick,
     undo,

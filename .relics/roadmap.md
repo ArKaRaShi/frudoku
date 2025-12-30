@@ -104,15 +104,23 @@
 #### 11.2 Notes/Pencil Marks Mode
 **Complexity:** Medium | **Why:** Essential for harder puzzles; players need to track candidates.
 
-- [ ] Extend Cell type to support `notes: number[]` (array of fruit indices)
-- [ ] Add `noteMode: boolean` to GameState
-- [ ] Add Notes toggle button in FruitPicker
-- [ ] Update Cell component to render small note emojis
-- [ ] Handle note mode in handleFruitClick (toggle in notes vs place fruit)
-- [ ] Auto-clear notes when cell is filled with actual fruit
-- [ ] Smart note clearing: remove notes from row/col/box when fruit placed
+- [x] Extend Cell type to support `notes: number[]` (array of fruit indices)
+- [x] Add `noteMode: boolean` to GameState
+- [x] Add Notes toggle button in FruitPicker
+- [x] Update Cell component to render small note emojis
+- [x] Handle note mode in handleFruitClick (toggle in notes vs place fruit)
+- [x] Auto-clear notes when cell is filled with actual fruit
+- [x] Smart note clearing: remove notes from row/col/box when fruit placed
 
 **Dependencies:** Cell type update, grid state management | **Risks:** UI complexity with small emoji rendering
+
+**Implementation Notes:**
+- Pencil icon button in FruitPicker toggles note mode (blue highlight when active)
+- Notes render in 3x3 mini grid within each cell (8px-10px font size)
+- Conservative smart clearing: removes placed fruit from row/col/box notes
+- Notes auto-clear when cell is filled with actual fruit
+- Note mode toggles notes on/off (click same fruit twice to remove)
+- Lint checks pass
 
 #### 11.3 Keyboard Navigation
 **Complexity:** Low | **Why:** Desktop users expect keyboard support; accessibility requirement.

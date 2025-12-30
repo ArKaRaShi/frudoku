@@ -15,7 +15,7 @@ Always consult the matching document before coding or making decisions:
 -   `.relics/concept.md` — Product vision, core mechanics, and UX guardrails.
 -   `.relics/architecture.md` — Source of truth for the tech stack, directory structure, import convention, React state shape (`GameState`, `Cell`, etc.), props flow diagram, Sudoku/theming utilities, difficulty definitions, and persistence keys. If you need anything "architecture" related, open this file first.
 -   `.relics/roadmap.md` — Phase checklist. Update it after each task: check off completed items and note key decisions.
--   `.relics/executions/` — **Task execution plans** broken down from roadmap features. Each file contains step-by-step technical implementation details. Before starting a feature, check if an execution plan exists here. If not, use the `task-planner` skill to create one.
+-   `.relics/executions/` — **Task execution plans** broken down from roadmap features. Each file contains step-by-step technical implementation details. Before starting a feature, check if an execution plan exists here. If not, use the `/task-planner` skill to create one.
 -   `.relics/future.md` — Approved future enhancements + priority tags.
 -   `.relics/refactor/v1-component-organization.md` — Notes on component-level refactors (e.g., splitting layout/state responsibilities).
 
@@ -24,9 +24,10 @@ Always consult the matching document before coding or making decisions:
 -   `bun run dev` – Start the dev server (http://localhost:3000)
 -   `bun run build` – Production build
 -   `bun run start` – Serve the production build
--   `bun run lint` – Run Biome
+-   `bun run lint` – Run Biome linter
 -   `bun run format` – Format with Biome
--   `bun run check:write` / `bun run check:write:unsafe` – Biome with auto-fix (safe vs. unsafe rules)
+-   `bun run check:write` – Biome with auto-fix (safe rules)
+-   `bun run check:write:unsafe` – Biome with auto-fix (unsafe rules)
 
 ## Working Guidelines
 
@@ -36,7 +37,7 @@ Always consult the matching document before coding or making decisions:
     3. Do NOT write code without an execution plan
 -   Read the relevant `.relics/` doc before touching code; architecture details should never be re-invented in this file.
 -   Keep Biome happy (2-space indentation, organized imports). Husky + lint-staged run the checks on commit.
--   Verification = lint only. Do **not** run `bun run build` (or any build command) unless the user explicitly requests it; use `bun run lint` for validation.
+-   Verification = `bun run check:write && bun run lint`. Do **not** run `bun run build` (or any build command) unless the user explicitly requests it.
 -   After finishing a change, update `.relics/roadmap.md` as described above.
 
 ## Commit Guidelines
@@ -55,6 +56,7 @@ perf: performance
 
 Examples:
 
--   `feat: add sudoku puzzle generation`
--   `fix: prevent selecting initial cells`
+-   `feat: add undo/redo system with arrow button controls`
+-   `feat: add smart cell highlighting with sky/orange colors`
+-   `fix: update number of cells to remove for medium and hard difficulty levels`
 -   `chore: configure husky and lint-staged`

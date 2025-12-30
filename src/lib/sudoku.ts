@@ -125,6 +125,7 @@ function createEmptyGrid(): Grid {
         initial: false,
         row,
         col,
+        notes: [],
       };
     }
   }

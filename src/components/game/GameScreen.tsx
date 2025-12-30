@@ -24,6 +24,8 @@ interface GameScreenProps {
   canRedo: boolean;
   onUndo: () => void;
   onRedo: () => void;
+  noteMode: boolean;
+  onToggleNoteMode: () => void;
 }
 
 export function GameScreen({
@@ -47,6 +49,8 @@ export function GameScreen({
   canRedo,
   onUndo,
   onRedo,
+  noteMode,
+  onToggleNoteMode,
 }: GameScreenProps) {
   return (
     <>
@@ -79,6 +83,8 @@ export function GameScreen({
         onFruitClick={onFruitClick}
         disabled={!selectedCell || gameStatus === "won"}
         fruits={currentFruits}
+        noteMode={noteMode}
+        onToggleNoteMode={onToggleNoteMode}
       />
     </>
   );
