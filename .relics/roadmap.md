@@ -27,3 +27,16 @@
 - [x] Visual feedback (selected cell, win state)
 - [x] Responsive design
 - [x] Accessibility (aria-labels on buttons)
+
+## Phase 6: Landing Page
+- [x] Landing page component with title and description
+- [x] Difficulty selector on landing page
+- [x] Start button to begin game
+- [x] Game flow: Landing → Game → Win (with Play Again)
+
+## Phase 7: Thai Localization
+- [x] Translate all UI text to Thai
+- [x] Landing page (ซูโดกุผลไม้, เริ่มเกม, etc.)
+- [x] Game controls (เกมใหม่, เมนู)
+- [x] Win screen (คุณชนะแล้ว!, เล่นอีกครั้ง, หน้าหลัก)
+- [x] Difficulty labels (ง่าย, ปานกลาง, ยาก)

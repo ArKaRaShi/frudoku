@@ -11,6 +11,8 @@ export type Grid = Cell[][];
 
 export type Difficulty = "easy" | "medium" | "hard";
 
+export type Screen = "landing" | "playing" | "won";
+
 export interface GameState {
   grid: Grid;
   selectedCell: { row: number; col: number } | null;

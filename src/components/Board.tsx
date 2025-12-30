@@ -15,7 +15,7 @@ export function Board({
   gameOver,
 }: BoardProps) {
   return (
-    <div className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-700 border-4 border-black dark:border-zinc-700 rounded">
+    <div className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-700 border-2 sm:border-4 border-black dark:border-zinc-700 rounded">
       {cells.map((boxRow) =>
         boxRow.map((box) => {
           // Use the first cell's position as unique box identifier

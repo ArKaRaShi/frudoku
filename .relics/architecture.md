@@ -1,5 +1,7 @@
 # Architecture
 
+**UI Language: All user-facing text is in Thai.**
+
 ## Import Convention
 **IMPORTANT: Use `src/*` path alias for all internal imports.**
 ```typescript

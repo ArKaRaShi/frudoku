@@ -16,7 +16,7 @@ export function Cell({ cell, isSelected, onClick, disabled }: CellProps) {
     <button
       type="button"
       onClick={onClick}
-      className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-2xl transition-colors ${
+      className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center text-xl sm:text-2xl transition-colors ${
         cell.initial
           ? "bg-zinc-300 dark:bg-zinc-700 font-bold"
           : isSelected

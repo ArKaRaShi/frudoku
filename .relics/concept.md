@@ -2,6 +2,8 @@
 
 A Sudoku puzzle game where numbers 1-9 are replaced with 9 different fruits.
 
+**UI Language: Thai (ภาษาไทย)** - All user-facing text is in Thai.
+
 ## The Concept
 
 Classic Sudoku rules, but with fruits instead of numbers:

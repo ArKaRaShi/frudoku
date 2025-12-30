@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Next.js 16 application for a fruit-themed Sudoku game. The project uses React 19, Tailwind CSS v4, TypeScript, and Biome for code quality.
 
+**UI Language: All user-facing text is in Thai.**
+
 ## Commands
 
 ### Development
