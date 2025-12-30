@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fruit Sudoku
 
-## Getting Started
+A fruit-themed Sudoku game built with Next.js 16, React 19, and Tailwind CSS v4. Replace numbers with colorful fruit emojis and enjoy classic Sudoku puzzles with a fresh twist.
 
-First, run the development server:
+## Features
+
+- **Fruit-Themed Gameplay** - Play Sudoku with vibrant fruit emojis instead of numbers
+- **3 Difficulty Levels** - Easy (40 holes), Medium (50 holes), Hard (60 holes)
+- **Dark/Light Mode** - Toggle between themes with system preference detection
+- **Custom Fruit Themes** - Choose from Default, Tropical, or create your own custom theme
+- **Conflict Detection** - Toggle to highlight conflicting cells in real-time
+- **Responsive Design** - Mobile-friendly with touch-optimized controls
+- **Thai Localization** - All UI text in Thai
+
+## Setup
+
+### Prerequisites
+
+- Node.js 18+
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone https://github.com/yourusername/fruit-sudoku.git
+cd fruit-sudoku
+
+# Install dependencies (choose one)
+bun install    # fastest
+npm install
+yarn install
+pnpm install
+
+# Start development server
+bun run dev    # or npm run dev, yarn dev, pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to play.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+bun run build
+bun run start
+```
 
-## Learn More
+## How to Play
 
-To learn more about Next.js, take a look at the following resources:
+1. **Select a cell** - Tap any empty cell on the 9x9 grid
+2. **Choose a fruit** - Select from the 9 fruit options at the bottom
+3. **Fill the grid** - Complete the puzzle so each row, column, and 3x3 box contains all 9 fruits
+4. **No conflicts** - Each fruit can appear only once per row, column, and box
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Code Quality
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+bun run lint          # Run linter
+bun run format        # Format code
+bun run check:write   # Auto-fix issues
+```
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

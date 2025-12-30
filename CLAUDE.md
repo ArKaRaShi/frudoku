@@ -26,22 +26,37 @@ This is a Next.js 16 application for a fruit-themed Sudoku game. The project use
 ## Architecture
 
 ### Tech Stack
-- **Framework**: Next.js 16 (App Router)
-- **React**: Version 19.2.3 with TypeScript
+- **Framework**: Next.js 16.1.1 (App Router)
+- **React**: Version 19.2.3 with TypeScript 5
 - **Styling**: Tailwind CSS v4 with PostCSS
-- **Linting/Formatting**: Biome (replaces ESLint/Prettier)
+- **Linting/Formatting**: Biome 2.2.0 (replaces ESLint/Prettier)
 - **Fonts**: Geist Sans and Geist Mono via next/font/google
 - **Package Manager**: Bun
+- **Hooks**: Husky 9.1.7 + lint-staged 16.2.7
+- **Theming**: next-themes ^0.4.6 (dark/light mode)
+- **UI Components**: Radix UI ^2.1.16 (dropdown menu)
+- **Icons**: lucide-react ^0.562.0
+- **State Management**: React built-in hooks (useState, useEffect, useCallback, useMemo)
 
 ### Project Structure
 ```
 src/
 ├── app/
-│   ├── layout.tsx       # Root layout with font configuration
-│   ├── page.tsx         # Main page component
+│   ├── layout.tsx       # Root layout with font & theme provider
+│   ├── page.tsx         # Main page component with all game state
 │   └── globals.css      # Global styles with Tailwind directives
 ├── components/          # React components
+│   ├── SudokuGrid.tsx   # 9x9 grid renderer
+│   ├── Board.tsx        # 3x3 box wrapper
+│   ├── Cell.tsx         # Individual cell
+│   ├── FruitPicker.tsx  # Fruit selection buttons
+│   ├── LandingPage.tsx  # Landing page
+│   ├── SettingsModal.tsx # Settings modal
+│   └── GameMenu.tsx     # Dropdown menu (Radix UI)
 └── lib/                 # Utilities, types, game logic
+    ├── sudoku.ts        # Puzzle generation & validation
+    ├── types.ts         # TypeScript types
+    └── themes.ts        # Fruit theme definitions
 ```
 
 ### TypeScript Configuration
@@ -55,6 +70,7 @@ src/
 - Enables recommended rules for Next.js and React
 - 2-space indentation
 - VCS integration with Git ignore file
+- Runs on pre-commit via Husky + lint-staged
 
 ## Working Guidelines
 
@@ -63,7 +79,7 @@ Before starting any work, read the relevant files in `.relics/`:
 - `.relics/concept.md` - Project concept and high-level features
 - `.relics/architecture.md` - Technical architecture, types, and data flow
 - `.relics/roadmap.md` - Implementation phases and progress tracking
-- `.relics/future.md` - Future feature ideas
+- `.relics/future.md` - Future feature ideas with priorities
 
 ### Update Roadmap
 After completing any task:
