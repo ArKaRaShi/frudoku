@@ -1,64 +1,123 @@
-import Image from "next/image";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { FruitPicker } from "src/components/FruitPicker";
+import { GameControls } from "src/components/GameControls";
+import { SudokuGrid } from "src/components/SudokuGrid";
+import type { Fruit } from "src/lib/fruits";
+import { generatePuzzle, isSolved } from "src/lib/sudoku";
+import type { Difficulty, GameState } from "src/lib/types";
 
 export default function Home() {
+  const [gameState, setGameState] = useState<GameState>(() => ({
+    grid: generatePuzzle("medium"),
+    selectedCell: null,
+    difficulty: "medium",
+    startTime: Date.now(),
+    gameStatus: "playing",
+  }));
+
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  // Timer effect
+  useEffect(() => {
+    if (gameState.gameStatus === "playing" && gameState.startTime) {
+      const startTime = gameState.startTime;
+      const interval = setInterval(() => {
+        setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [gameState.startTime, gameState.gameStatus]);
+
+  // Start new game
+  const newGame = useCallback((difficulty: Difficulty) => {
+    setGameState({
+      grid: generatePuzzle(difficulty),
+      selectedCell: null,
+      difficulty,
+      startTime: Date.now(),
+      gameStatus: "playing",
+    });
+    setElapsedTime(0);
+  }, []);
+
+  // Handle cell click
+  const handleCellClick = useCallback((row: number, col: number) => {
+    setGameState((prev) => {
+      const cell = prev.grid[row][col];
+      // Can only select non-initial cells
+      if (cell.initial) {
+        return prev;
+      }
+      return {
+        ...prev,
+        selectedCell: { row, col },
+      };
+    });
+  }, []);
+
+  // Handle fruit selection
+  const handleFruitClick = useCallback((fruit: Fruit) => {
+    setGameState((prev) => {
+      if (!prev.selectedCell || prev.gameStatus === "won") {
+        return prev;
+      }
+
+      const { row, col } = prev.selectedCell;
+      const newGrid = prev.grid.map((r) =>
+        r.map((cell) => {
+          if (cell.row === row && cell.col === col) {
+            return { ...cell, value: fruit };
+          }
+          return cell;
+        }),
+      );
+
+      const newStatus = isSolved(newGrid) ? "won" : "playing";
+
+      return {
+        ...prev,
+        grid: newGrid,
+        gameStatus: newStatus,
+      };
+    });
+  }, []);
+
+  const { grid, selectedCell, difficulty, gameStatus } = gameState;
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+      <main className="flex flex-col items-center gap-8 py-16 px-4">
+        <h1 className="text-4xl font-bold tracking-tight text-black dark:text-zinc-50">
+          Fruit Sudoku
+        </h1>
+
+        <GameControls
+          difficulty={difficulty}
+          onDifficultyChange={newGame}
+          onNewGame={() => newGame(difficulty)}
+          elapsedTime={elapsedTime}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* Win Message */}
+        {gameStatus === "won" && (
+          <div className="px-6 py-3 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full font-semibold animate-bounce">
+            You solved it! 🎉
+          </div>
+        )}
+
+        <SudokuGrid
+          grid={grid}
+          selectedCell={selectedCell}
+          onCellClick={handleCellClick}
+          gameOver={gameStatus === "won"}
+        />
+
+        <FruitPicker
+          onFruitClick={handleFruitClick}
+          disabled={!selectedCell || gameStatus === "won"}
+        />
       </main>
     </div>
   );

@@ -43,7 +43,8 @@ src/
 ```
 
 ### TypeScript Configuration
-- Path alias: `src/*` maps to the project root (`./`)
+- Path alias: `src/*` maps to `./src/*`
+- **IMPORTANT: Always use `src/` imports, never `@/`**
 - Strict mode enabled
 - React 19 JSX transform
 

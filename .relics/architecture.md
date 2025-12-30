@@ -1,5 +1,27 @@
 # Architecture
 
+## Import Convention
+**IMPORTANT: Use `src/*` path alias for all internal imports.**
+```typescript
+// ✅ Correct
+import { Cell } from "src/components/Cell";
+import type { Grid } from "src/lib/types";
+
+// ❌ Never use @/
+import { Cell } from "@/components/Cell"; // WRONG
+```
+
+## Tech Stack
+
+-   **Framework**: Next.js 16 (App Router)
+-   **React**: Version 19.2.3 with TypeScript
+-   **Styling**: Tailwind CSS v4 with PostCSS
+-   **Linting/Formatting**: Biome (replaces ESLint/Prettier)
+-   **Fonts**: Geist Sans and Geist Mono via next/font/google
+-   **Package Manager**: Bun
+-   **State Management**: React built-in hooks (useState, useEffect)
+-   **No external UI libraries** - custom components with Tailwind
+
 ## Directory Structure
 
 ```
@@ -23,20 +45,20 @@ src/
 
 ```typescript
 interface Cell {
-  value: Fruit | null      // 0-8 or null
-  initial: boolean         // pre-filled?
-  row: number
-  col: number
+	value: Fruit | null; // 0-8 or null
+	initial: boolean; // pre-filled?
+	row: number;
+	col: number;
 }
 
-type Grid = Cell[][]
+type Grid = Cell[][];
 
 interface GameState {
-  grid: Grid
-  selectedCell: { row: number; col: number } | null
-  difficulty: 'easy' | 'medium' | 'hard'
-  startTime: number | null
-  gameStatus: 'playing' | 'won'
+	grid: Grid;
+	selectedCell: { row: number; col: number } | null;
+	difficulty: "easy" | "medium" | "hard";
+	startTime: number | null;
+	gameStatus: "playing" | "won";
 }
 ```
 
@@ -60,20 +82,30 @@ page.tsx (state holder)
 
 ## lib/sudoku.ts Exports
 
-- `generatePuzzle(difficulty): Grid` - Returns playable puzzle
-- `isSolved(grid): boolean` - Check if complete & valid
-- `isValidMove(grid, row, col, value): boolean` - Validation helper
+-   `generatePuzzle(difficulty): Grid` - Returns playable puzzle
+-   `isSolved(grid): boolean` - Check if complete & valid
+-   `isValidMove(grid, row, col, value): boolean` - Validation helper
 
 ## Fruit Constants (lib/fruits.ts)
 
 ```typescript
-export const FRUITS = ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🥝', '🍒', '🍍'] as const
-export type Fruit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-export const fruitEmoji = (n: number): string => FRUITS[n]
+export const FRUITS = [
+	"🍎",
+	"🍊",
+	"🍋",
+	"🍇",
+	"🍓",
+	"🍑",
+	"🥝",
+	"🍒",
+	"🍍",
+] as const;
+export type Fruit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export const fruitEmoji = (n: number): string => FRUITS[n];
 ```
 
 ## Difficulty = Holes to Punch
 
-- easy: 40 cells removed
-- medium: 50 cells removed
-- hard: 60 cells removed
+-   easy: 40 cells removed
+-   medium: 50 cells removed
+-   hard: 60 cells removed
