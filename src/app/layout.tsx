@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "src/components/ThemeProvider";
+import { ThemeProvider } from "src/components/providers/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ซูโดกุผลไม้ - Fruit Sudoku",
+  title: "ซูโดกุผลไม้ - Frudoku",
   description: "เกมซูโดกุสนุกๆ พร้อมธีมผลไม้",
 };
 
@@ -28,11 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
       </body>

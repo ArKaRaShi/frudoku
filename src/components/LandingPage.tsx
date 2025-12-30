@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+import { DIFFICULTY_HOLES } from "src/lib/sudoku";
 import type { Difficulty } from "src/lib/types";
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -5,6 +7,9 @@ const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   medium: "ปานกลาง",
   hard: "ยาก",
 };
+
+const TOTAL_CELLS = 81;
+const DIFFICULTY_ORDER: Difficulty[] = ["easy", "medium", "hard"];
 
 interface LandingPageProps {
   selectedDifficulty: Difficulty;
@@ -66,11 +71,15 @@ export function LandingPage({
         </div>
 
         <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-zinc-500 dark:text-zinc-500">
-          <span>ง่าย: 40 คำใบ้</span>
-          <span>•</span>
-          <span>ปานกลาง: 31 คำใบ้</span>
-          <span>•</span>
-          <span>ยาก: 21 คำใบ้</span>
+          {DIFFICULTY_ORDER.map((difficulty, index) => (
+            <Fragment key={difficulty}>
+              <span>
+                {DIFFICULTY_LABELS[difficulty]}:{" "}
+                {TOTAL_CELLS - DIFFICULTY_HOLES[difficulty]} คำใบ้
+              </span>
+              {index < DIFFICULTY_ORDER.length - 1 && <span>•</span>}
+            </Fragment>
+          ))}
         </div>
 
         <button

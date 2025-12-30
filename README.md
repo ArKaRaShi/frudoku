@@ -1,4 +1,4 @@
-# Fruit Sudoku
+# Frudoku
 
 A fruit-themed Sudoku game built with Next.js 16, React 19, and Tailwind CSS v4. Replace numbers with colorful fruit emojis and enjoy classic Sudoku puzzles with a fresh twist.
 
@@ -23,7 +23,7 @@ A fruit-themed Sudoku game built with Next.js 16, React 19, and Tailwind CSS v4.
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/fruit-sudoku.git
-cd fruit-sudoku
+cd frudoku
 
 # Install dependencies (choose one)
 bun install    # fastest

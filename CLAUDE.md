@@ -1,106 +1,55 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This document is the jump-off point for Claude Code (claude.ai/code) when working in this repo. Treat it as an index: it tells you where to look for the detailed project knowledge that lives in `.relics/`.
 
-## Project Overview
+## Quick Overview
 
-This is a Next.js 16 application for a fruit-themed Sudoku game. The project uses React 19, Tailwind CSS v4, TypeScript, and Biome for code quality.
+-   Fruit-themed Sudoku built with Next.js 16 + React 19, Tailwind CSS v4, TypeScript, Bun, and Biome.
+-   All UI copy **must remain in Thai**.
+-   Imports use the `src/*` alias (never `@/`). The alias setup, state types, props flow, and lib contracts are described in `.relics/architecture.md`.
 
-**UI Language: All user-facing text is in Thai.**
+## Reference Index (.relics/)
+
+Always consult the matching document before coding or making decisions:
+
+-   `.relics/concept.md` — Product vision, core mechanics, and UX guardrails.
+-   `.relics/architecture.md` — Source of truth for the tech stack, directory structure, import convention, React state shape (`GameState`, `Cell`, etc.), props flow diagram, Sudoku/theming utilities, difficulty definitions, and persistence keys. If you need anything “architecture” related, open this file first.
+-   `.relics/roadmap.md` — Phase checklist. Update it after each task: check off completed items and note key decisions.
+-   `.relics/future.md` — Approved future enhancements + priority tags.
+-   `.relics/refactor/v1-component-organization.md` — Notes on component-level refactors (e.g., splitting layout/state responsibilities).
 
 ## Commands
 
-### Development
-- `bun run dev` - Start the development server at http://localhost:3000
-
-### Build & Production
-- `bun run build` - Build the application for production
-- `bun run start` - Start the production server
-
-### Code Quality
-- `bun run lint` - Run Biome linter to check code quality
-- `bun run format` - Format code with Biome
-- `bun run check:write` - Run Biome linter with auto-fix
-- `bun run check:write:unsafe` - Run Biome linter with unsafe auto-fixes
-
-## Architecture
-
-### Tech Stack
-- **Framework**: Next.js 16.1.1 (App Router)
-- **React**: Version 19.2.3 with TypeScript 5
-- **Styling**: Tailwind CSS v4 with PostCSS
-- **Linting/Formatting**: Biome 2.2.0 (replaces ESLint/Prettier)
-- **Fonts**: Geist Sans and Geist Mono via next/font/google
-- **Package Manager**: Bun
-- **Hooks**: Husky 9.1.7 + lint-staged 16.2.7
-- **Theming**: next-themes ^0.4.6 (dark/light mode)
-- **UI Components**: Radix UI ^2.1.16 (dropdown menu)
-- **Icons**: lucide-react ^0.562.0
-- **State Management**: React built-in hooks (useState, useEffect, useCallback, useMemo)
-
-### Project Structure
-```
-src/
-├── app/
-│   ├── layout.tsx       # Root layout with font & theme provider
-│   ├── page.tsx         # Main page component with all game state
-│   └── globals.css      # Global styles with Tailwind directives
-├── components/          # React components
-│   ├── SudokuGrid.tsx   # 9x9 grid renderer
-│   ├── Board.tsx        # 3x3 box wrapper
-│   ├── Cell.tsx         # Individual cell
-│   ├── FruitPicker.tsx  # Fruit selection buttons
-│   ├── LandingPage.tsx  # Landing page
-│   ├── SettingsModal.tsx # Settings modal
-│   └── GameMenu.tsx     # Dropdown menu (Radix UI)
-└── lib/                 # Utilities, types, game logic
-    ├── sudoku.ts        # Puzzle generation & validation
-    ├── types.ts         # TypeScript types
-    └── themes.ts        # Fruit theme definitions
-```
-
-### TypeScript Configuration
-- Path alias: `src/*` maps to `./src/*`
-- **IMPORTANT: Always use `src/` imports, never `@/`**
-- Strict mode enabled
-- React 19 JSX transform
-
-### Biome Configuration
-- Organizes imports automatically on save
-- Enables recommended rules for Next.js and React
-- 2-space indentation
-- VCS integration with Git ignore file
-- Runs on pre-commit via Husky + lint-staged
+-   `bun run dev` – Start the dev server (http://localhost:3000)
+-   `bun run build` – Production build
+-   `bun run start` – Serve the production build
+-   `bun run lint` – Run Biome
+-   `bun run format` – Format with Biome
+-   `bun run check:write` / `bun run check:write:unsafe` – Biome with auto-fix (safe vs. unsafe rules)
 
 ## Working Guidelines
 
-### ALWAYS Check .relics First
-Before starting any work, read the relevant files in `.relics/`:
-- `.relics/concept.md` - Project concept and high-level features
-- `.relics/architecture.md` - Technical architecture, types, and data flow
-- `.relics/roadmap.md` - Implementation phases and progress tracking
-- `.relics/future.md` - Future feature ideas with priorities
-
-### Update Roadmap
-After completing any task:
-1. Mark the item as completed `[x]` in `.relics/roadmap.md`
-2. Add notes if needed (e.g., implementation details, decisions made)
+-   Read the relevant `.relics/` doc before touching code; architecture details should never be re-invented in this file.
+-   Keep Biome happy (2-space indentation, organized imports). Husky + lint-staged run the checks on commit.
+-   Verification = lint only. Do **not** run `bun run build` (or any build command) unless the user explicitly requests it; use `bun run lint` for validation.
+-   After finishing a change, update `.relics/roadmap.md` as described above.
 
 ## Commit Guidelines
 
-Use conventional commits when creating git commits:
+Use conventional commits:
 
 ```
-feat:  new feature
-fix:   bug fix
-chore: maintenance, config, deps
+feat: new feature
+fix: bug fix
+chore: maintenance/config/deps
 refactor: code restructuring
-docs:  documentation
-test:  tests
-perf:  performance
+docs: documentation
+test: tests
+perf: performance
 ```
 
 Examples:
-- `feat: add sudoku puzzle generation`
-- `fix: prevent selecting initial cells`
-- `chore: configure husky and lint-staged`
+
+-   `feat: add sudoku puzzle generation`
+-   `fix: prevent selecting initial cells`
+-   `chore: configure husky and lint-staged`

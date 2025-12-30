@@ -1,4 +1,4 @@
-# Fruit Sudoku
+# Frudoku
 
 A Sudoku puzzle game where numbers 1-9 are replaced with 9 different fruits.
 

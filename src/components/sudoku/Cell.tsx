@@ -24,7 +24,7 @@ export function Cell({
     <button
       type="button"
       onClick={onClick}
-      className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center text-xl sm:text-2xl transition-colors ${
+      className={`w-full aspect-square flex items-center justify-center text-xl sm:text-2xl md:text-3xl transition-colors ${
         hasConflict
           ? "bg-red-200 dark:bg-red-900"
           : cell.initial

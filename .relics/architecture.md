@@ -127,8 +127,8 @@ page.tsx (state holder)
 
 ## Local Storage Keys
 
-- `fruit-sudoku-theme` - Current fruit theme
-- `fruit-sudoku-custom-fruits` - Custom fruit selections (9 emojis)
+- `frudoku-theme` - Current fruit theme
+- `frudoku-custom-fruits` - Custom fruit selections (9 emojis)
 
 ## Theme System
 

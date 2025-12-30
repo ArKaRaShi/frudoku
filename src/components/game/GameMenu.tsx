@@ -2,7 +2,6 @@
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { AlertCircle, Check, Home, RotateCw } from "lucide-react";
-import * as React from "react";
 
 interface GameMenuProps {
   difficulty: string;
@@ -13,7 +12,7 @@ interface GameMenuProps {
 }
 
 export function GameMenu({
-  difficulty,
+  difficulty: _difficulty,
   showConflicts,
   onNewGame,
   onToggleConflicts,

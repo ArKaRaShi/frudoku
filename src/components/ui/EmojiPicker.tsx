@@ -39,7 +39,7 @@ export function EmojiPicker({ selected, onChange }: EmojiPickerProps) {
       <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 gap-1 justify-items-center">
         {Array.from({ length: slots }).map((_, index) => (
           <button
-            key={index}
+            key={`slot-${index}-${selected[index] || "empty"}`}
             type="button"
             onClick={() => handleSlotClick(index)}
             className={`w-9 h-9 sm:w-10 sm:h-10 text-xl sm:text-2xl rounded-full border-2 transition-colors ${

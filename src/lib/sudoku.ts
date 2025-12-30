@@ -1,8 +1,8 @@
 import type { Difficulty, Grid } from "./types";
 
 // Number of cells to remove for each difficulty level
-const DIFFICULTY_HOLES: Record<Difficulty, number> = {
-  easy: 40,
+export const DIFFICULTY_HOLES: Record<Difficulty, number> = {
+  easy: 5,
   medium: 50,
   hard: 60,
 };
@@ -42,6 +42,51 @@ export function isValidMove(
   }
 
   return true;
+}
+
+/**
+ * Get all cells that have conflicts with other cells
+ * Returns a Set of "row-col" strings for conflicting cells
+ */
+export function getConflictingCells(grid: Grid): Set<string> {
+  const conflicts = new Set<string>();
+
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      const cell = grid[row][col];
+      if (cell.value === null) continue;
+
+      // Check row for duplicates
+      for (let c = 0; c < 9; c++) {
+        if (c !== col && grid[row][c].value === cell.value) {
+          conflicts.add(`${row}-${col}`);
+          conflicts.add(`${row}-${c}`);
+        }
+      }
+
+      // Check column for duplicates
+      for (let r = 0; r < 9; r++) {
+        if (r !== row && grid[r][col].value === cell.value) {
+          conflicts.add(`${row}-${col}`);
+          conflicts.add(`${r}-${col}`);
+        }
+      }
+
+      // Check 3x3 box for duplicates
+      const boxRow = Math.floor(row / 3) * 3;
+      const boxCol = Math.floor(col / 3) * 3;
+      for (let r = boxRow; r < boxRow + 3; r++) {
+        for (let c = boxCol; c < boxCol + 3; c++) {
+          if ((r !== row || c !== col) && grid[r][c].value === cell.value) {
+            conflicts.add(`${row}-${col}`);
+            conflicts.add(`${r}-${c}`);
+          }
+        }
+      }
+    }
+  }
+
+  return conflicts;
 }
 
 /**

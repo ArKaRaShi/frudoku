@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import type { Fruit } from "src/lib/fruits";
 
 interface FruitPickerProps {
@@ -41,16 +42,7 @@ export function FruitPicker({
         disabled={disabled}
         aria-label="ลบผลไม้"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
-        >
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        <X className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" strokeWidth={2} />
       </button>
     </div>
   );
