@@ -6,6 +6,8 @@ interface SudokuGridProps {
   selectedCell: { row: number; col: number } | null;
   onCellClick: (row: number, col: number) => void;
   gameOver: boolean;
+  conflictingCells: Set<string>;
+  fruits: string[];
 }
 
 export function SudokuGrid({
@@ -13,6 +15,8 @@ export function SudokuGrid({
   selectedCell,
   onCellClick,
   gameOver,
+  conflictingCells,
+  fruits,
 }: SudokuGridProps) {
   // Organize grid into 3x3 boxes
   const boxes: Grid[][] = [];
@@ -40,6 +44,8 @@ export function SudokuGrid({
       selectedCell={selectedCell}
       onCellClick={onCellClick}
       gameOver={gameOver}
+      conflictingCells={conflictingCells}
+      fruits={fruits}
     />
   );
 }

@@ -10,12 +10,16 @@ interface LandingPageProps {
   selectedDifficulty: Difficulty;
   onDifficultyChange: (difficulty: Difficulty) => void;
   onStart: () => void;
+  onSettings: () => void;
+  currentFruits: string[];
 }
 
 export function LandingPage({
   selectedDifficulty,
   onDifficultyChange,
   onStart,
+  onSettings,
+  currentFruits,
 }: LandingPageProps) {
   return (
     <div className="flex flex-col items-center gap-8 max-w-md text-center">
@@ -23,6 +27,12 @@ export function LandingPage({
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-black dark:text-zinc-50">
           ซูโดกุผลไม้
         </h1>
+        {/* Show current theme fruits */}
+        <div className="flex justify-center gap-1 text-2xl">
+          {currentFruits.map((fruit, index) => (
+            <span key={index}>{fruit}</span>
+          ))}
+        </div>
         <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
           ซูโดกุคลาสสิกที่ใช้ผลไม้แทนตัวเลข เติมแต่ละแถว คอลัมน์ และกล่อง 3×3 ด้วยผลไม้ทั้ง 9 ชนิด
         </p>
@@ -65,6 +75,14 @@ export function LandingPage({
           className="mt-4 px-10 sm:px-12 py-3 sm:py-4 text-lg sm:text-xl font-semibold rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg hover:shadow-xl"
         >
           เริ่มเกม
+        </button>
+
+        <button
+          type="button"
+          onClick={onSettings}
+          className="px-4 py-2 text-sm rounded-full bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+        >
+          ตั้งค่า
         </button>
       </div>
     </div>

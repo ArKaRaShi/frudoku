@@ -6,6 +6,8 @@ interface BoardProps {
   selectedCell: { row: number; col: number } | null;
   onCellClick: (row: number, col: number) => void;
   gameOver: boolean;
+  conflictingCells: Set<string>;
+  fruits: string[];
 }
 
 export function Board({
@@ -13,6 +15,8 @@ export function Board({
   selectedCell,
   onCellClick,
   gameOver,
+  conflictingCells,
+  fruits,
 }: BoardProps) {
   return (
     <div className="grid grid-cols-3 gap-px bg-black dark:bg-zinc-700 border-2 sm:border-4 border-black dark:border-zinc-700 rounded">
@@ -33,13 +37,18 @@ export function Board({
                   const isSelected =
                     selectedCell?.row === cell.row &&
                     selectedCell?.col === cell.col;
+                  const hasConflict = conflictingCells.has(
+                    `${cell.row}-${cell.col}`,
+                  );
                   return (
                     <Cell
                       key={`${cell.row}-${cell.col}`}
                       cell={cell}
                       isSelected={isSelected}
+                      hasConflict={hasConflict}
                       onClick={() => onCellClick(cell.row, cell.col)}
                       disabled={gameOver}
+                      fruits={fruits}
                     />
                   );
                 }),

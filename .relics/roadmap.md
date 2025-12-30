@@ -40,3 +40,25 @@
 - [x] Game controls (เกมใหม่, เมนู)
 - [x] Win screen (คุณชนะแล้ว!, เล่นอีกครั้ง, หน้าหลัก)
 - [x] Difficulty labels (ง่าย, ปานกลาง, ยาก)
+
+## Phase 8: Auto-Check / Highlight Conflicts
+- [x] Toggle button for highlight mode (แสดงผลไม้ชนกัน)
+- [x] Detect conflicts in row, column, and 3x3 box
+- [x] Highlight ALL conflicting cells (including pre-filled) in red
+- [x] Permanent highlighting until error is fixed
+- [x] Update Cell component to show error state
+- [x] Update game state to track conflicts
+- [x] Clear/erase button (ลบผลไม้) - X icon in fruit picker to clear cell
+
+## Phase 9: Fruit Themes & Customization
+- [x] Theme definitions (Default, Tropical, Custom)
+- [x] Theme selector in settings modal
+- [x] Custom fruit picker - 9 emoji input fields with emoji grid
+- [x] Local storage to save selected theme/custom fruits
+- [x] Update fruits.ts to support dynamic fruit sets
+- [x] Settings button on landing page
+- [x] Update all components to use dynamic fruits (Cell, Board, SudokuGrid, FruitPicker)
+
+**Themes:**
+- Default: 🍎 🍊 🍋 🍇 🍓 🍑 🥝 🍒 🍍
+- Tropical: 🥥 🥭 🍌 🍍 🥝 🍉 🍈 🥑 🍅
