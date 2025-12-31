@@ -26,7 +26,7 @@ function isInSameBox(
 
 // Helper to get the value of the selected cell from the grid
 function getSelectedCellValue(
-  cells: Grid[][][],
+  cells: Grid[][],
   selectedCell: { row: number; col: number },
 ): number | null {
   const boxRow = Math.floor(selectedCell.row / 3);
